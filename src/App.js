@@ -14,7 +14,7 @@ function App() {
       .min(3)
       .max(10),
     lastName: Joi.string()
-      .required()
+      .allow("")
       .messages({
         "string.empty": "Last name can not be empty",
       })
@@ -29,6 +29,7 @@ function App() {
     formState: { errors },
     setValue,
     clearErrors,
+    watch,
   } = useForm({
     mode: "onSubmit",
     shouldFocusError: true,
@@ -41,6 +42,7 @@ function App() {
     resolver: joiResolver(formSchema),
   });
   // console.log(errors);
+  const checkbox = watch("checkbox");
 
   const onSubmit = (data) => {
     console.log(data);
@@ -62,7 +64,7 @@ function App() {
             <>
               <Input
                 label="Enter Your Name"
-                placeholder="Enter Name"
+                placeholder="Enter First Name"
                 value={value}
                 onChange={(e, { value }) => {
                   onChange(value);
@@ -80,8 +82,9 @@ function App() {
             <>
               <Input
                 label="Enter Your Name"
-                placeholder="Enter Name"
-                value={value}
+                placeholder="Enter Last Name"
+                value={checkbox ? value : ""}
+                disabled={!checkbox}
                 onChange={(e, { value }) => {
                   onChange(value);
                 }}
@@ -109,14 +112,14 @@ function App() {
           type="button"
           onClick={() => handleSetValue("firstName", "Shahin")}
         >
-          Set Value
+          Set First Name
         </Button>
-        <Button
+        {/* <Button
           type="button"
           onClick={() => handleSetValue("lastName", "Ahmed")}
         >
-          Set Value
-        </Button>
+          Set Last Name
+        </Button> */}
         <Button primary type="submit">
           Submit
         </Button>
