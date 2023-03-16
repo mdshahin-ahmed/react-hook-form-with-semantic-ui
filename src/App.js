@@ -9,7 +9,11 @@ import {
   Checkbox,
   Dropdown,
   Radio,
+  Grid,
+  Container,
 } from "semantic-ui-react";
+import { useEffect, useState } from "react";
+import CardStyle from "./components/CardStyle";
 
 const options = [
   { key: 1, text: "Male", value: "Male" },
@@ -17,7 +21,23 @@ const options = [
   { key: 3, text: "Others", value: "Others" },
 ];
 
+const fetchLocalStorageData = () => {
+  const formData = localStorage.getItem("formData");
+  if (formData) {
+    return JSON.parse(localStorage.getItem("formData") || "");
+  } else {
+    return [];
+  }
+};
+
 function App() {
+  const [datas, setDatas] = useState(fetchLocalStorageData());
+  // console.log(datas);
+
+  useEffect(() => {
+    localStorage.setItem("formData", JSON.stringify(datas));
+  }, [datas]);
+
   const formSchema = Joi.object({
     firstName: Joi.string()
       .required()
@@ -28,10 +48,15 @@ function App() {
       .min(3)
       .max(10),
     lastName: Joi.string()
-      .allow("")
-      .messages({
-        "string.empty": "Last name can not be empty",
+      .when("checkbox", {
+        is: true,
+        then: Joi.required(),
+        otherwise: Joi.allow(""),
       })
+      // .allow("")
+      // .messages({
+      //   "string.empty": "Last name can not be empty",
+      // })
       .min(5)
       .max(15),
     checkbox: Joi.boolean(),
@@ -65,12 +90,27 @@ function App() {
   const checkbox = watch("checkbox");
 
   const onSubmit = (data) => {
-    console.log(data);
+    setDatas([...datas, { ...data, id: datas.length }]);
+    // console.log(data);
   };
 
   const handleSetValue = (key, value) => {
     setValue(key, value);
     clearErrors(key);
+  };
+
+  const handleDelete = (id) => {
+    const deletedData = datas.filter((data) => data.id !== id);
+    setDatas(deletedData);
+  };
+
+  const handleEdit = (id, editData) => {
+    const oldData = datas.filter((data) => data.id !== id);
+    console.log(oldData);
+    // const newData = { ...oldData, editData };
+    setDatas([...oldData, editData]);
+    // console.log(id);
+    // console.log(editData);
   };
 
   return (
@@ -231,7 +271,6 @@ function App() {
             />
           </Form.Field>
         </Form.Group> */}
-        <br></br>
         <Button
           type="button"
           onClick={() => handleSetValue("firstName", "Shahin")}
@@ -251,6 +290,26 @@ function App() {
           </Button>
         </div>
       </Form>
+
+      {/* render data  */}
+
+      <Container style={{ marginTop: "50px" }}>
+        <Grid>
+          <Grid.Row>
+            {datas
+              .sort((a, b) => a.id - b.id)
+              .map((data, index) => (
+                <CardStyle
+                  key={index}
+                  data={data}
+                  index={index}
+                  handleDelete={handleDelete}
+                  handleEdit={handleEdit}
+                />
+              ))}
+          </Grid.Row>
+        </Grid>
+      </Container>
     </div>
   );
 }
