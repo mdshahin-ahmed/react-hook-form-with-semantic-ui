@@ -1,6 +1,6 @@
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
-import React, { useState } from "react";
+import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   Button,
@@ -19,9 +19,6 @@ const options = [
 ];
 
 const EditModal = ({ data, open, setOpen, handleEdit }) => {
-  //   console.log(data);
-  const [formData, setFormData] = useState();
-
   const formSchema = Joi.object({
     firstName: Joi.string()
       .required()
@@ -47,6 +44,13 @@ const EditModal = ({ data, open, setOpen, handleEdit }) => {
     radio: Joi.boolean(),
     gender: Joi.string().required(),
     id: Joi.number(),
+    radioGroup1: Joi.string().allow(""),
+    radioGroup2: Joi.string().allow(""),
+    radioGroup3: Joi.string().allow(""),
+    radioGroup4: Joi.string().allow(""),
+    radioGroup5: Joi.string().allow(""),
+    radioGroup6: Joi.string().allow(""),
+    date: Joi.date(),
     // radioGroup: Joi.string().allow(""),
   });
   const {
@@ -241,6 +245,25 @@ const EditModal = ({ data, open, setOpen, handleEdit }) => {
             />
           </Form.Field>
         </Form.Group> */}
+
+              {/* Day picker */}
+
+              <Form.Field>
+                <Controller
+                  control={control}
+                  name="date"
+                  render={({ field: { value, onChange } }) => (
+                    <Input
+                      type="date"
+                      value={value}
+                      onChange={(e, { value }) => onChange(value)}
+                    />
+                  )}
+                />
+              </Form.Field>
+
+              {/* Day picker */}
+
               <Button
                 type="button"
                 onClick={() => handleSetValue("firstName", "Shahin")}

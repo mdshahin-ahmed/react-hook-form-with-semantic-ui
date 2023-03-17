@@ -62,16 +62,23 @@ function App() {
     checkbox: Joi.boolean(),
     radio: Joi.boolean(),
     gender: Joi.string().required(),
-    // radioGroup: Joi.string().allow(""),
+    radioGroup1: Joi.string().allow(""),
+    radioGroup2: Joi.string().allow(""),
+    radioGroup3: Joi.string().allow(""),
+    radioGroup4: Joi.string().allow(""),
+    radioGroup5: Joi.string().allow(""),
+    radioGroup6: Joi.string().allow(""),
+    date: Joi.date(),
   });
 
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitSuccessful },
     setValue,
     clearErrors,
     watch,
+    reset,
   } = useForm({
     mode: "onSubmit",
     shouldFocusError: true,
@@ -82,16 +89,28 @@ function App() {
       checkbox: false,
       radio: false,
       gender: "",
-      // radioGroup: "",
+      radioGroup1: "",
+      radioGroup2: "",
+      radioGroup3: "",
+      radioGroup4: "",
+      radioGroup5: "",
+      radioGroup6: "",
+      date: "",
     },
     resolver: joiResolver(formSchema),
   });
-  // console.log(errors);
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful, reset]);
+  console.log("errors: ", errors);
   const checkbox = watch("checkbox");
 
   const onSubmit = (data) => {
     setDatas([...datas, { ...data, id: datas.length }]);
-    // console.log(data);
+    console.log(data);
   };
 
   const handleSetValue = (key, value) => {
@@ -217,60 +236,112 @@ function App() {
             )}
           />
         </Form.Field>
-        {/* <Form.Group>
-          <Form.Field>
-            <Controller
-              control={control}
-              name="radioGroup"
-              render={({ field: { value, onChange } }) => (
-                <Radio
-                  label="One"
-                  value="one"
-                  onChange={(e, { value }) => onChange(value)}
-                />
-              )}
-            />
-          </Form.Field>
-          <Form.Field>
-            <Controller
-              control={control}
-              name="radioGroup"
-              render={({ field: { value, onChange } }) => (
-                <Radio
-                  label="Tow"
-                  value="two"
-                  onChange={(e, { value }) => onChange(value)}
-                />
-              )}
-            />
-          </Form.Field>
-          <Form.Field>
-            <Controller
-              control={control}
-              name="radioGroup"
-              render={({ field: { value, onChange } }) => (
-                <Radio
-                  label="Three"
-                  value="three"
-                  onChange={(e, { value }) => onChange(value)}
-                />
-              )}
-            />
-          </Form.Field>
-          <Form.Field>
-            <Controller
-              control={control}
-              name="radioGroup"
-              render={({ field: { value, onChange } }) => (
-                <Radio
-                  label="Four"
-                  value="four"
-                  onChange={(e, { value }) => onChange(value)}
-                />
-              )}
-            />
-          </Form.Field>
-        </Form.Group> */}
+
+        {/* ****************************************** */}
+
+        <Form.Field>
+          <Controller
+            control={control}
+            name="radioGroup1"
+            render={({ field: { value, onChange } }) => (
+              <Radio
+                toggle
+                label="One"
+                value="one"
+                onChange={(e, { value }) => onChange([value])}
+              />
+            )}
+          />
+        </Form.Field>
+        <Form.Field>
+          <Controller
+            control={control}
+            name="radioGroup2"
+            render={({ field: { value, onChange } }) => (
+              <Radio
+                toggle
+                label="Tow"
+                value="two"
+                onChange={(e, { value }) => onChange([value])}
+              />
+            )}
+          />
+        </Form.Field>
+        <Form.Field>
+          <Controller
+            control={control}
+            name="radioGroup3"
+            render={({ field: { value, onChange } }) => (
+              <Radio
+                toggle
+                label="Three"
+                value="three"
+                onChange={(e, { value }) => onChange(value)}
+              />
+            )}
+          />
+        </Form.Field>
+        <Form.Field>
+          <Controller
+            control={control}
+            name="radioGroup4"
+            render={({ field: { value, onChange } }) => (
+              <Radio
+                toggle
+                label="Four"
+                value="four"
+                onChange={(e, { value }) => onChange(value)}
+              />
+            )}
+          />
+        </Form.Field>
+        <Form.Field>
+          <Controller
+            control={control}
+            name="radioGroup5"
+            render={({ field: { value, onChange } }) => (
+              <Radio
+                label="Five"
+                value="five"
+                onChange={(e, { value }) => onChange(value)}
+              />
+            )}
+          />
+        </Form.Field>
+        <Form.Field>
+          <Controller
+            control={control}
+            name="radioGroup6"
+            render={({ field: { value, onChange } }) => (
+              <Radio
+                label="Six"
+                value="six"
+                onChange={(e, { value }) => onChange(value)}
+              />
+            )}
+          />
+        </Form.Field>
+
+        {/* ********************************************* */}
+
+        {/* Day picker */}
+
+        <Form.Field>
+          <Controller
+            control={control}
+            name="date"
+            render={({ field: { value, onChange } }) => (
+              <Input
+                type="date"
+                value={value}
+                onChange={(e, { value }) => onChange(value)}
+              />
+            )}
+          />
+        </Form.Field>
+
+        {/* Day picker */}
+
         <Button
           type="button"
           onClick={() => handleSetValue("firstName", "Shahin")}
